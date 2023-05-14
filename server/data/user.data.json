@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Marisa",
+    "email": "marisa@gmail.com",
+    "password": "Marisa@123",
+    "confirmPassword": "Marisa@123",
+    "gender": "female",
+    "phone": "+4901906315901",
+    "store":"645f618009f2df4a2eac74de",
+    "dob":"1980-01-22"
+  }
+]
