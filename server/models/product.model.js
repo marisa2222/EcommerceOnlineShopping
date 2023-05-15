@@ -138,6 +138,17 @@ const productSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    size: {
+      type: String,
+      required: [true, "Please, provide a product size"],
+    },
+
+    //for stock quantity
+    stock: {
+      type: Number,
+      required: [true, "Please provide stock quantity"],
+      default: 0,
+    },
   },
   { timestamps: true }
 );
