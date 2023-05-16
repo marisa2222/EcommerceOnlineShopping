@@ -205,7 +205,7 @@ const AddNewProduct = () => {
               >
                 {errors.stock ? (
                   <span className="text-red-500 font-medium">
-                    Product Stock field is required!
+                    Product Stock field is required!(you should enter a number more than 1)
                   </span>
                 ) : (
                   <span className="flex justify-between">
@@ -220,7 +220,7 @@ const AddNewProduct = () => {
                   name="stock"
                   type="number"
                   autoComplete="off"
-                  placeholder="Enter your product stock"
+                  placeholder="Enter your product stock(you should enter a number more than 1)"
                   {...register("stock", { required: true, maxLength: 20 })}
                   className={`w-full form-input rounded-md`}
                 />
