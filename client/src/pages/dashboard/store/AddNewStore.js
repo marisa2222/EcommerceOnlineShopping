@@ -49,7 +49,7 @@ const AddNewStore = () => {
       >
         <div className="grid grid-cols-1 gap-y-4">
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
-            {/* store title */}
+            {/* Gender */}
             <div>
               <label
                 htmlFor="title"
@@ -57,11 +57,11 @@ const AddNewStore = () => {
               >
                 {errors.title ? (
                   <span className="text-red-500 font-medium">
-                    Store title field is required!
+                    Gender field is required!
                   </span>
                 ) : (
                   <span className="flex justify-between">
-                    Store title{" "}
+                    Gender{" "}
                     <span className="hover:text-gray-500">{"<="} 100</span>{" "}
                   </span>
                 )}
@@ -72,7 +72,7 @@ const AddNewStore = () => {
                   name="title"
                   type="text"
                   autoComplete="off"
-                  placeholder="Enter your store title"
+                  placeholder="Enter The Gender (Man,Woman,Kid)"
                   {...register("title", { required: true, maxLength: 100 })}
                   className={`w-full form-input rounded-md ${
                     watch("title")?.length > 100 &&
@@ -90,11 +90,11 @@ const AddNewStore = () => {
               >
                 {errors.description ? (
                   <span className="text-red-500 font-medium">
-                    Store description field is required!
+                     description field is required!
                   </span>
                 ) : (
                   <span className="flex justify-between">
-                    Store description{" "}
+                     description{" "}
                     <span className="hover:text-gray-500">{"<="} 1000</span>{" "}
                   </span>
                 )}
@@ -105,7 +105,7 @@ const AddNewStore = () => {
                   name="description"
                   type="text"
                   autoComplete="off"
-                  placeholder="Enter your store description"
+                  placeholder="Enter your description"
                   {...register("description", {
                     required: true,
                     maxLength: 1000,
@@ -129,11 +129,11 @@ const AddNewStore = () => {
               >
                 {errors.tags ? (
                   <span className="text-red-500 font-medium">
-                    Store tags field is required!
+                     tags field is required!
                   </span>
                 ) : (
                   <span className="flex justify-between">
-                    Store tags{" "}
+                     tags{" "}
                     <span className="hover:text-gray-500">{"<="} upto 5</span>{" "}
                   </span>
                 )}
@@ -193,7 +193,7 @@ const AddNewStore = () => {
 
           {/* store thumbnail */}
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
-            {/* store thumbnail */}
+            {/*  thumbnail */}
             <div>
               <label
                 htmlFor="thumbnail"
@@ -201,7 +201,7 @@ const AddNewStore = () => {
               >
                 {errors.thumbnail ? (
                   <span className="text-red-500 font-medium">
-                    Store thumbnail field is required!
+                     thumbnail field is required!
                   </span>
                 ) : (
                   <span className="flex justify-between">
@@ -229,7 +229,7 @@ const AddNewStore = () => {
                         Thumbnail uploading
                       </span>
                     ) : !Object.keys(photo).length ? (
-                      "Store thumbnail (765x850)"
+                      " thumbnail (765x850)"
                     ) : (
                       <span className="flex">
                         <svg

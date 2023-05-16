@@ -132,10 +132,43 @@ const AddNewProduct = () => {
                 />
               </div>
             </div>
+
+            {/* product size */}
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {errors.title ? (
+                  <span className="text-red-500 font-medium">
+                    Product size field is required!
+                  </span>
+                ) : (
+                  <span className="flex justify-between">
+                    Product size{" "}
+                    <span className="hover:text-gray-500">{"<="} 3</span>{" "}
+                  </span>
+                )}
+              </label>
+              <div className="mt-1">
+                <input
+                  id="title"
+                  name="title"
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Enter your product size"
+                  {...register("size", { required: true, maxLength: 3 })}
+                  className={`w-full form-input rounded-md ${
+                    watch("size")?.length > 3 &&
+                    "focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                  }`}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
-            {/* product price */}
+            {/* product Stock */}
             <div>
               <label
                 htmlFor="price"
@@ -160,6 +193,35 @@ const AddNewProduct = () => {
                   autoComplete="off"
                   placeholder="Enter your product price"
                   {...register("price", { required: true, maxLength: 100 })}
+                  className={`w-full form-input rounded-md`}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="Stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {errors.stock ? (
+                  <span className="text-red-500 font-medium">
+                    Product Stock field is required!
+                  </span>
+                ) : (
+                  <span className="flex justify-between">
+                    Product stock{" "}
+                    <span className="hover:text-gray-500">{">="} 00</span>{" "}
+                  </span>
+                )}
+              </label>
+              <div className="mt-1">
+                <input
+                  id="stock"
+                  name="stock"
+                  type="number"
+                  autoComplete="off"
+                  placeholder="Enter your product stock"
+                  {...register("stock", { required: true, maxLength: 20 })}
                   className={`w-full form-input rounded-md`}
                 />
               </div>
@@ -280,6 +342,7 @@ const AddNewProduct = () => {
                   {...register("subcategory", { required: true })}
                   className="w-full form-select rounded-md"
                 >
+                  <option value="" >Select ...</option>
                   {subcategories.map((subcategory) => (
                     <option key={subcategory?._id} value={subcategory?._id}>
                       {subcategory?.title}
@@ -333,6 +396,7 @@ const AddNewProduct = () => {
                   {...register("brand", { required: true })}
                   className="w-full form-select rounded-md"
                 >
+                  <option value="" >Select ...</option>
                   {brands.map((brand) => (
                     <option key={brand?._id} value={brand?._id}>
                       {brand?.title}
@@ -350,7 +414,7 @@ const AddNewProduct = () => {
               >
                 {errors.store ? (
                   <span className="text-red-500 font-medium">
-                    store field is required!
+                    Gender field is required!
                   </span>
                 ) : displayingStores ? (
                   <span className="flex">
@@ -376,7 +440,7 @@ const AddNewProduct = () => {
                     Store fetching
                   </span>
                 ) : (
-                  "Store"
+                  "Gender"
                 )}
               </label>
               <div className="mt-1">
@@ -386,6 +450,7 @@ const AddNewProduct = () => {
                   {...register("store", { required: true })}
                   className="w-full form-select rounded-md"
                 >
+                  <option value="" >Select Gender</option>
                   {stores.map((store) => (
                     <option key={store?._id} value={store?._id}>
                       {store?.title}

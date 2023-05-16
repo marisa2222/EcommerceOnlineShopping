@@ -55,7 +55,7 @@ exports.createProduct = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+ };
 
 /* display all product */
 exports.displayProducts = async (req, res, next) => {

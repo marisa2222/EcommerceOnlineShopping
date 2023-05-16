@@ -236,6 +236,8 @@ const AddNewSubcategory = () => {
                   {...register("category", { required: true })}
                   className="w-full form-select rounded-md"
                 >
+                  
+                  <option value="" >Select category</option>
                   {categories.map((category) => (
                     <option key={category?._id} value={category?._id}>
                       {category?.title}
