@@ -12,6 +12,8 @@ const Subcategory = require("../models/subcategory.model");
 const User = require("../models/user.model");
 const remove = require("../utils/remove.util");
 
+const storeService = require("./store.service");
+
 // remove gallery
 async function galleryRemove(gallery) {
   gallery.forEach(async (gal) => await remove(gal.public_id));
@@ -38,6 +40,84 @@ exports.createProduct = async (data) => {
 /* display all products */
 exports.displayProducts = async ({ page, limit }) => {
   const result = await Product.find({})
+    .skip((Number(page) - 1) * limit)
+    .limit(limit)
+    .sort("-updatedAt")
+    .populate([
+      {
+        path: "subcategory",
+        select: "title",
+      },
+      {
+        path: "brand",
+        select: "title",
+      },
+      {
+        path: "store",
+        select: "title",
+      },
+    ]);
+
+  const count = await Product.estimatedDocumentCount();
+  return { products: result, count };
+};
+
+/* display women products */
+exports.displayWomenProducts = async ({ page, limit }) => {
+  const filter = { gender: "Women" };
+  const result = await Product.find(filter)
+    .skip((Number(page) - 1) * limit)
+    .limit(limit)
+    .sort("-updatedAt")
+    .populate([
+      {
+        path: "subcategory",
+        select: "title",
+      },
+      {
+        path: "brand",
+        select: "title",
+      },
+      {
+        path: "store",
+        select: "title",
+      },
+    ]);
+
+  const count = await Product.estimatedDocumentCount();
+  return { products: result, count };
+};
+
+/* display kids products */
+exports.displayKidsProducts = async ({ page, limit }) => {
+  const filter = { gender: "kids" };
+  const result = await Product.find(filter)
+    .skip((Number(page) - 1) * limit)
+    .limit(limit)
+    .sort("-updatedAt")
+    .populate([
+      {
+        path: "subcategory",
+        select: "title",
+      },
+      {
+        path: "brand",
+        select: "title",
+      },
+      {
+        path: "store",
+        select: "title",
+      },
+    ]);
+
+  const count = await Product.estimatedDocumentCount();
+  return { products: result, count };
+};
+
+/* display men products */
+exports.displayMenProducts = async ({ page, limit }) => {
+  const filter = { gender: "men" };
+  const result = await Product.find(filter)
     .skip((Number(page) - 1) * limit)
     .limit(limit)
     .sort("-updatedAt")

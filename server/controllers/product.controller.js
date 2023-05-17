@@ -121,3 +121,56 @@ exports.removeProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+/* display women product */
+exports.displayWomenProducts = async (req, res, next) => {
+  try {
+    const result = await productService.displayWomenProducts(req.query);
+
+    res.status(200).json({
+      acknowledgement: true,
+      message: "OK",
+      description: "Successfully fetch all women product credentials",
+      count: result.count,
+      data: result.products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+/* display men product */
+exports.displayMenProducts = async (req, res, next) => {
+  try {
+    const result = await productService.displayMenProducts(req.query);
+
+    res.status(200).json({
+      acknowledgement: true,
+      message: "OK",
+      description: "Successfully fetch all men product credentials",
+      count: result.count,
+      data: result.products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+/* display kids product */
+exports.displayKidsProducts = async (req, res, next) => {
+  try {
+    const result = await productService.displayKidsProducts(req.query);
+
+    res.status(200).json({
+      acknowledgement: true,
+      message: "OK",
+      description: "Successfully fetch all Kids product credentials",
+      count: result.count,
+      data: result.products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

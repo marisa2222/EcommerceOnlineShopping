@@ -35,6 +35,15 @@ router.post("/create", productController.createProduct);
 // display all product
 router.get("/all", productController.displayProducts);
 
+// display women product
+ router.get("/women", productController.displayWomenProducts);
+
+// display men product
+ router.get("/men", productController.displayMenProducts);
+
+// // display kids product
+ router.get("/kids", productController.displayKidsProducts);
+
 // display, update and remove specific product
 router
   .route("/:id")

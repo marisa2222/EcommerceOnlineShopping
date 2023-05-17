@@ -37,6 +37,7 @@ exports.displayStore = async ({ id }) => {
   return await Store.findById(id);
 };
 
+
 /* update specific store */
 exports.updateStore = async (id, data) => {
   return await Store.findByIdAndUpdate(id, data, {
