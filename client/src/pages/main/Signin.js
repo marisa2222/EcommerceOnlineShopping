@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSigninMutation } from "../../features/auth/authApi";
 import { toast } from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 const Signin = () => {
   // react hook form credentials
@@ -13,33 +12,49 @@ const Signin = () => {
     formState: { errors },
   } = useForm();
 
+  const [apiResult, setApiResult] = useState({
+    isSuccess: false,
+    message: "",
+  });
+
   // server side credentials
   const [signin, { isLoading: logging, isSuccess: logged }] =
     useSigninMutation();
 
   // user credentials from state
-  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (Object.keys(user).length) {
-      navigate("/");
-    }
-  }, [user, navigate]);
 
   useEffect(() => {
     // sign in
     if (logging) {
       toast.loading("Signing in.", { id: "signin_user" });
     } else if (logged) {
-      toast.success("Signed in.", {
-        id: "signin_user",
+      if (apiResult.isSuccess === true) {
+        toast.success("Signed in.", {
+          id: "signin_user",
+        });
+        navigate("/");
+      } else {
+        toast.error(apiResult.message, {
+          id: "signin_user",
+        });
+      }
+    }
+  }, [logging, logged, apiResult]);
+
+  const handleSigninForm = async (data) => {
+    const result = await signin(data);
+    if (result.data.accessToken) {
+      setApiResult({
+        isSuccess: true,
+        message: "",
+      });
+    } else {
+      setApiResult({
+        isSuccess: result.data.acknowledgement,
+        message: result.data.description,
       });
     }
-  }, [logging, logged]);
-
-  const handleSigninForm = (data) => {
-    signin(data);
   };
 
   return (

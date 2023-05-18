@@ -88,13 +88,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [
         true,
-        "Please, provide your phone number, i.e.: +4901xxxxxxxxx",
+        "Please, provide your phone number, i.e.: +491xxxxxxxxxx",
       ],
       validate: {
         validator: (value) =>
-          validator.isMobilePhone(value, "bn-BD", { strictMode: true }),
+          validator.isMobilePhone(value, "de-DE", { strictMode: true }),
         message:
-          "Phone number {VALUE} is not valid. Please, retry like +4901xxxxxxxxx",
+          "Phone number {VALUE} is not valid. Please, retry like +491xxxxxxxxxx",
       },
     },
 

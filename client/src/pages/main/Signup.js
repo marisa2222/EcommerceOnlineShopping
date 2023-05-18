@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSignupMutation } from "../../features/auth/authApi";
@@ -21,6 +21,10 @@ const Signup = () => {
   const date = today.setDate(today.getDate());
   const defaultValue = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
 
+  const [apiResult, setApiResult] = useState({
+    isSuccess: true,
+    message: "",
+  });
   // server side credentials
   const [signup, { isLoading: registering, isSuccess: registered }] =
     useSignupMutation();
@@ -38,15 +42,26 @@ const Signup = () => {
   }, [user, navigate]);
 
   // grab avatar credentials from state
-  const { photo } = useSelector((state) => state.upload);
+  const { photo } = useSelector((state) => {
+    if (registered && apiResult.isSuccess === true) {
+      return {};
+    }
+    return state.upload;
+  });
 
   useEffect(() => {
     if (registering) {
       toast.loading("Signing up.", { id: "signup_user" });
     } else if (registered) {
-      toast.success("Signed up.", {
-        id: "signup_user",
-      });
+      if (apiResult.isSuccess === true) {
+        toast.success("Signed up.", {
+          id: "signup_user",
+        });
+      } else {
+        toast.error(apiResult.message, {
+          id: "signup_user",
+        });
+      }
     } else if (uploading) {
       toast.loading("Uploading avatar", {
         id: "user_avatar",
@@ -56,15 +71,21 @@ const Signup = () => {
         id: "user_avatar",
       });
     }
-  }, [registering, registered, uploading, uploaded]);
+  }, [registering, registered, apiResult, uploading, uploaded]);
 
   // submit signup form
-  const handleSignupForm = (data) => {
-    data["phone"] = "+490" + data["phone"];
+  const handleSignupForm = async (data) => {
+    data["phone"] = "+49" + data["phone"];
     data["avatar"] = { url: photo.url, public_id: photo.public_id };
 
-    signup(data);
-    reset();
+    const result = await signup(data);
+    if (result.data.acknowledgement === true) {
+      reset();
+    }
+    setApiResult({
+      isSuccess: result.data.acknowledgement,
+      message: result.data.description,
+    });
   };
 
   return (
@@ -225,7 +246,7 @@ const Signup = () => {
                   )}
                 </label>
                 <div className="mt-1">
-                  {Object.keys(photo).length ? (
+                  {photo && Object.keys(photo).length ? (
                     <input
                       type="text"
                       className="form-input rounded-md w-full"
@@ -319,19 +340,19 @@ const Signup = () => {
                       Phone Number field is required!
                     </span>
                   ) : (
-                    "Phone Number (BD)"
+                    "Phone Number"
                   )}
                 </label>
                 <div className="mt-1 flex">
                   <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
-                    +490
+                    +49
                   </span>
                   <input
                     id="phone"
                     name="phone"
                     type="tel"
                     autoComplete="off"
-                    placeholder="i.e.: +4901xxxxxxxxx"
+                    placeholder="i.e.: +491xxxxxxxxxx"
                     maxLength="10"
                     {...register("phone", { required: true })}
                     className={`w-full form-input rounded-r-md ${
