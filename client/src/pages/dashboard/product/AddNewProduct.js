@@ -414,7 +414,7 @@ const AddNewProduct = () => {
               >
                 {errors.store ? (
                   <span className="text-red-500 font-medium">
-                    Gender field is required!
+                    Store field is required!
                   </span>
                 ) : displayingStores ? (
                   <span className="flex">
@@ -440,7 +440,7 @@ const AddNewProduct = () => {
                     Store fetching
                   </span>
                 ) : (
-                  "Gender"
+                  "Store"
                 )}
               </label>
               <div className="mt-1">
@@ -450,7 +450,7 @@ const AddNewProduct = () => {
                   {...register("store", { required: true })}
                   className="w-full form-select rounded-md"
                 >
-                  <option value="" >Select Gender</option>
+                  <option value="" >Select Store</option>
                   {stores.map((store) => (
                     <option key={store?._id} value={store?._id}>
                       {store?.title}

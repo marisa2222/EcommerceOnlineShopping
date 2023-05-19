@@ -49,7 +49,7 @@ const AddNewStore = () => {
       >
         <div className="grid grid-cols-1 gap-y-4">
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
-            {/* Gender */}
+            {/*Store */}
             <div>
               <label
                 htmlFor="title"
@@ -57,11 +57,11 @@ const AddNewStore = () => {
               >
                 {errors.title ? (
                   <span className="text-red-500 font-medium">
-                    Gender field is required!
+                    Store field is required!
                   </span>
                 ) : (
                   <span className="flex justify-between">
-                    Gender{" "}
+                    Store{" "}
                     <span className="hover:text-gray-500">{"<="} 100</span>{" "}
                   </span>
                 )}
@@ -72,7 +72,7 @@ const AddNewStore = () => {
                   name="title"
                   type="text"
                   autoComplete="off"
-                  placeholder="Enter The Gender (Man,Woman,Kid)"
+                  placeholder="Enter The Store "
                   {...register("title", { required: true, maxLength: 100 })}
                   className={`w-full form-input rounded-md ${
                     watch("title")?.length > 100 &&
