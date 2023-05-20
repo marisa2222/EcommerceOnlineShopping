@@ -22,16 +22,15 @@ const productSchema = new mongoose.Schema(
       maxLength: [100, "Product title would be at most 100 characters"],
     },
 
-     // for user gender
-     gender: {
+    // for user gender
+    gender: {
       type: String,
       enum: {
         values: ["Men", "Women", "Kids"],
         message: "Gender would be Men/Women/Kids",
       },
       required: [true, "Please, provide product gender"],
-      default: "Women"
-
+      default: "Women",
     },
 
     // for description
@@ -150,17 +149,30 @@ const productSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    size: {
-      type: String,
-      required: [true, "Please, provide a product size"],
-    },
 
-    //for stock quantity
-    stock: {
-      type: Number,
-      required: [true, "Please provide stock quantity"],
-      default: 0,
-    },
+    // for size/color/stock
+    detail: [
+      {
+        size: {
+          type: String,
+          required: [true, "Please, provide a product size"],
+        },
+        //for stock quantity
+        stock: {
+          type: Number,
+          required: [true, "Please provide stock quantity"],
+          default: 0,
+        },
+        color: {
+          type: String,
+          required: [true, "Please, provide a product color"],
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

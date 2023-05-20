@@ -90,7 +90,7 @@ exports.displayWomenProducts = async ({ page, limit }) => {
 
 /* display kids products */
 exports.displayKidsProducts = async ({ page, limit }) => {
-  const filter = { gender: "kids" };
+  const filter = { gender: "Kids" };
   const result = await Product.find(filter)
     .skip((Number(page) - 1) * limit)
     .limit(limit)
@@ -116,7 +116,7 @@ exports.displayKidsProducts = async ({ page, limit }) => {
 
 /* display men products */
 exports.displayMenProducts = async ({ page, limit }) => {
-  const filter = { gender: "men" };
+  const filter = { gender: "Men" };
   const result = await Product.find(filter)
     .skip((Number(page) - 1) * limit)
     .limit(limit)
