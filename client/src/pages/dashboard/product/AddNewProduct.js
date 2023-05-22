@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
+import { Popover, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import { useCreateProductMutation } from "../../../features/product/productApi";
 import { useSelector } from "react-redux";
@@ -9,6 +10,8 @@ import {
 import { useDisplaySubcategoriesQuery } from "../../../features/subcategory/subcategoryApi";
 import { useDisplayBrandsQuery } from "../../../features/brand/brandApi";
 import { useDisplayStoresQuery } from "../../../features/store/storeApi";
+import { CirclePicker } from "react-color";
+import { toast } from "react-hot-toast";
 
 const AddNewProduct = () => {
   // react hook form credentials
@@ -18,6 +21,18 @@ const AddNewProduct = () => {
     handleSubmit,
     formState: { errors },
     reset,
+  } = useForm();
+
+  // react hook form 
+  const {
+    register: registerDetail,
+    watch: watchDetail,
+    handleSubmit: handleSubmitDetail,
+    formState: { errors: errorsDetail },
+    reset: resetDetail,
+    setValue,
+    setError,
+    clearErrors,
   } = useForm();
 
   // server side credentials
@@ -41,6 +56,7 @@ const AddNewProduct = () => {
   // upload credentials from state
   const { photo, gallery } = useSelector((state) => state.upload);
   const [tags, setTags] = useState([]);
+  const [details, setDetails] = useState([]);
   const removeTag = (selectedTag) => {
     setTags(tags.filter((tag) => tag !== selectedTag));
   };
@@ -50,17 +66,45 @@ const AddNewProduct = () => {
     data.tags = tags;
     data.thumbnail = photo;
     data.gallery = gallery;
+    data.detail = details;
     createProduct(data);
     reset();
+  };
+
+  const handleAddProductDetailForm = (data) => {
+    if (!data.color) {
+      setError("color", { type: "custom" });
+      return;
+    }
+    setDetails([...details, data]);
+    resetDetail({
+      size: null,
+      color: null,
+      stock: null,
+    });
+    toast.success("Added Product Detail.", {
+      id: "add_product_detail",
+    });
+  };
+
+  const handleChangeColorComplete = (color) => {
+    setValue("color", color.hex, { shouldValidate: true });
+    clearErrors("color");
   };
 
   return (
     <section className="grid grid-cols-12 gap-8">
       {/* product form */}
       <form
-        className="md:col-span-7 col-span-12"
+        id="productForm"
         onSubmit={handleSubmit(handleAddProductForm)}
-      >
+      ></form>
+      <form
+        id="detailFrom"
+        className="md:col-span-7 col-span-12"
+        onSubmit={handleSubmitDetail(handleAddProductDetailForm)}
+      ></form>
+      <div className="md:col-span-7 col-span-12">
         <div className="grid grid-cols-1 gap-y-4">
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
             {/* product title */}
@@ -132,43 +176,9 @@ const AddNewProduct = () => {
                 />
               </div>
             </div>
-
-            {/* product size */}
-            <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {errors.title ? (
-                  <span className="text-red-500 font-medium">
-                    Product size field is required!
-                  </span>
-                ) : (
-                  <span className="flex justify-between">
-                    Product size{" "}
-                    <span className="hover:text-gray-500">{"<="} 3</span>{" "}
-                  </span>
-                )}
-              </label>
-              <div className="mt-1">
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  autoComplete="off"
-                  placeholder="Enter your product size"
-                  {...register("size", { required: true, maxLength: 3 })}
-                  className={`w-full form-input rounded-md ${
-                    watch("size")?.length > 3 &&
-                    "focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                  }`}
-                />
-              </div>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
-            {/* product Stock */}
             <div>
               <label
                 htmlFor="price"
@@ -197,36 +207,6 @@ const AddNewProduct = () => {
                 />
               </div>
             </div>
-
-            <div>
-              <label
-                htmlFor="Stock"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {errors.stock ? (
-                  <span className="text-red-500 font-medium">
-                    Product Stock field is required!(you should enter a number more than 1)
-                  </span>
-                ) : (
-                  <span className="flex justify-between">
-                    Product stock{" "}
-                    <span className="hover:text-gray-500">{">="} 00</span>{" "}
-                  </span>
-                )}
-              </label>
-              <div className="mt-1">
-                <input
-                  id="stock"
-                  name="stock"
-                  type="number"
-                  autoComplete="off"
-                  placeholder="Enter your product stock(you should enter a number more than 1)"
-                  {...register("stock", { required: true, maxLength: 20 })}
-                  className={`w-full form-input rounded-md`}
-                />
-              </div>
-            </div>
-
             {/* product tags */}
             <div>
               <label
@@ -342,7 +322,7 @@ const AddNewProduct = () => {
                   {...register("subcategory", { required: true })}
                   className="w-full form-select rounded-md"
                 >
-                  <option value="" >Select ...</option>
+                  <option value="">Select ...</option>
                   {subcategories.map((subcategory) => (
                     <option key={subcategory?._id} value={subcategory?._id}>
                       {subcategory?.title}
@@ -396,7 +376,7 @@ const AddNewProduct = () => {
                   {...register("brand", { required: true })}
                   className="w-full form-select rounded-md"
                 >
-                  <option value="" >Select ...</option>
+                  <option value="">Select ...</option>
                   {brands.map((brand) => (
                     <option key={brand?._id} value={brand?._id}>
                       {brand?.title}
@@ -450,7 +430,7 @@ const AddNewProduct = () => {
                   {...register("store", { required: true })}
                   className="w-full form-select rounded-md"
                 >
-                  <option value="" >Select Store</option>
+                  <option value="">Select Store</option>
                   {stores.map((store) => (
                     <option key={store?._id} value={store?._id}>
                       {store?.title}
@@ -460,8 +440,8 @@ const AddNewProduct = () => {
               </div>
             </div>
 
-             {/* gender */}
-             <div>
+            {/* gender */}
+            <div>
               <label
                 htmlFor="gender"
                 className="block text-sm font-medium text-gray-700"
@@ -481,13 +461,168 @@ const AddNewProduct = () => {
                   {...register("gender", { required: true })}
                   className="w-full form-select rounded-md"
                 >
-                  <option value="" >Select Gender</option>
-                  <option value="Women" >Women</option>
-                  <option value="Men" >Men</option>
-                  <option value="Kids" >Kids</option>
-
+                  <option value="">Select Gender</option>
+                  <option value="Women">Women</option>
+                  <option value="Men">Men</option>
+                  <option value="Kids">Kids</option>
                 </select>
               </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-y-8 bg-white p-4 rounded-md">
+            <Popover className="relative">
+              <>
+                <Popover.Button className="w-full btn-primary">
+                  Add Detail
+                </Popover.Button>
+                <Transition
+                  as={Fragment}
+                  appear={true}
+                  enter="transition-all duration-300"
+                  enterFrom="transform translate-x-full"
+                  enterTo="transform translate-x-100"
+                  leave="transition-all duration-300"
+                  leaveFrom="transform translate-x-0"
+                  leaveTo="transform translate-x-full"
+                >
+                  <Popover.Panel className="absolute w-screen max-w-xs sm:max-w-md overflow-y-auto divide-y divide-gray-100 rounded-2xl bg-white shadow-lg ring-1 ring-black focus:outline-none">
+                    <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black p-6">
+                      {/* product size */}
+                      <div>
+                        <label
+                          htmlFor="size"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {errorsDetail.size ? (
+                            <span className="text-red-500 font-medium">
+                              Product size field is required!
+                            </span>
+                          ) : (
+                            <span className="flex justify-between">
+                              Product size{" "}
+                              <span className="hover:text-gray-500">
+                                {"<="} 3
+                              </span>{" "}
+                            </span>
+                          )}
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            id="size"
+                            name="size"
+                            type="text"
+                            autoComplete="off"
+                            placeholder="Enter your product size"
+                            {...registerDetail("size", {
+                              required: true,
+                              maxLength: 3,
+                            })}
+                            className={`w-full form-input rounded-md ${
+                              watchDetail("size")?.length > 3 &&
+                              "focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                            }`}
+                          />
+                        </div>
+                      </div>
+                      {/* product Stock */}
+                      <div>
+                        <label
+                          htmlFor="Stock"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {errorsDetail.stock ? (
+                            <span className="text-red-500 font-medium">
+                              Product Stock field is required!(you should enter
+                              a number more than 1)
+                            </span>
+                          ) : (
+                            <span className="flex justify-between">
+                              Product stock{" "}
+                              <span className="hover:text-gray-500">
+                                {">="} 1
+                              </span>{" "}
+                            </span>
+                          )}
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            id="stock"
+                            name="stock"
+                            type="number"
+                            autoComplete="off"
+                            placeholder="Enter a number more than 1"
+                            {...registerDetail("stock", {
+                              required: true,
+                              maxLength: 20,
+                            })}
+                            className={`w-full form-input rounded-md`}
+                          />
+                        </div>
+                      </div>
+
+                      {/* product Color */}
+                      <div>
+                        <label
+                          htmlFor="color"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {errorsDetail.color ? (
+                            <span className="text-red-500 font-medium">
+                              Product color field is required!
+                            </span>
+                          ) : (
+                            <span className="flex justify-between">
+                              Product color
+                            </span>
+                          )}
+                        </label>
+                        <div className="mt-1">
+                          <CirclePicker
+                            id="color"
+                            name="color"
+                            onChangeComplete={handleChangeColorComplete}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="my-1">
+                        <button
+                          type="submit"
+                          className="w-full btn-primary"
+                          form="detailFrom"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </Popover.Panel>
+                </Transition>
+              </>
+            </Popover>
+            <div className="grid grid-cols-4 gap-y-3 bg-white p-1 rounded-md text-center">
+              <div>Size</div>
+              <div>Color</div>
+              <div>Stock</div>
+              <div>Action</div>
+              {details?.map((detail, index) => (
+                <>
+                  <div>{detail.size}</div>
+                  <div style={{ background: detail.color }}></div>
+                  <div>{detail.stock}</div>
+                  <div>
+                    <span
+                      className="text-red-500 hover:text-red-700 cursor-pointer"
+                      onClick={(e) => {
+                        details.splice(1, 1);
+                        setDetails([...details]);
+                      }}
+                    >
+                      Delete
+                    </span>
+                  </div>
+                </>
+              ))}
             </div>
           </div>
 
@@ -705,13 +840,19 @@ const AddNewProduct = () => {
                 Creating Product...
               </button>
             ) : (
-              <button type="submit" className="w-full btn-primary">
-                Create New Product
-              </button>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full btn-primary"
+                  form="productForm"
+                >
+                  Create New Product
+                </button>
+              </div>
             )}
           </div>
         </div>
-      </form>
+      </div>
 
       {/* product alert */}
       <section className="md:col-span-5 col-span-12 h-full w-full rounded-md shadow p-4">

@@ -1,3 +1,10 @@
+/**
+ * Title: Create store
+ * Description: create store
+ * Author: Maryam-Svitlana
+ * Date: 20/05/2023
+ */
+
 import { configureStore } from "@reduxjs/toolkit";
 import apiSlice from "../features/api/apiSlice";
 import uploadSlice from "../features/upload/uploadSlice";
