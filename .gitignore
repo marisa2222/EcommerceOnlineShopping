@@ -28,13 +28,12 @@ client/yarn-error.log*
 
 # dependencies
 server/node_modules
+node_modules
 
 #misc
 server/.env
-client/src/pages/dashboard/ListProduct.js
 client/.yarn
 server/.yarn
-package.json
 .yarnrc.yml
 .yarnrc
 .yarn
