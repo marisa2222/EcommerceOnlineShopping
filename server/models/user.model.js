@@ -87,7 +87,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: [
-        true,
+        false,
         "Please, provide your phone number, i.e.: +491xxxxxxxxxx",
       ],
       validate: {
