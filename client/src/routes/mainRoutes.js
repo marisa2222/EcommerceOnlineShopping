@@ -11,6 +11,7 @@ import ProductDescription from "../pages/main/ProductDescription";
 import Profile from "../pages/main/Profile";
 import Order from "../pages/main/Order";
 import ComingSoon from "../components/main/ComingSoon";
+import Checkout from "../pages/main/Checkout";
 const Home = lazy(() => import("../pages/main/Home"));
 
 const mainRoutes = {
@@ -86,6 +87,14 @@ const mainRoutes = {
       element: (
         <SplitRouter>
           <ProductDescription />
+        </SplitRouter>
+      ),
+    },
+    {
+      path: "/checkout",
+      element: (
+        <SplitRouter>
+          <Checkout />
         </SplitRouter>
       ),
     },
