@@ -3,10 +3,12 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import LazyLoadingImage from "../../components/LazyLoadingImage";
 import NumberInput from "../../components/NumberInput";
+import CheckoutModal from "../../components/main/CheckoutModal";
 
 export default function Checkout() {
   const getIamgeUrl = (imgName) => "/assets/checkout/" + imgName;
 
+  const [isOpen, setIsOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const [cardIcon, setCardIcon] = useState(getIamgeUrl("unknown.png"));
 
@@ -15,13 +17,17 @@ export default function Checkout() {
       user: { name, email, phone, address, cart },
     },
   } = useSelector((state) => state);
-  const { register } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       name,
       email,
       phone,
       address,
-      cardHolder:name
+      cardHolder: name,
     },
   });
 
@@ -65,28 +71,39 @@ export default function Checkout() {
     }
   };
 
-  return (
-    <div className="grid grid-cols-12 gap-12 rounded-md">
-      <div className="col-start-2 col-span-6 rounded-md border-1 bg-white p-4">
-        <div className="grid grid-rows-6 rounded-md">
-          <div className="">
-            <h3 className="text-xl font-semibold py-4 border-b-2">
-              Shipping details
-            </h3>
-          </div>
+  const handlePayment = (data) => {
+    console.log(errors);
+    setIsOpen(true);
+  };
 
-          <div className="row-span-5">
-            <form className="flex-grow mt-10 md:mt-0 md:pr-16 max-w-3xl space-y-6">
+  return (
+    <form onSubmit={handleSubmit(handlePayment)}>
+      <div className="grid grid-cols-12 gap-12 rounded-md">
+        <div className="col-start-2 col-span-6 rounded-md border-1 bg-white p-4">
+          <div className="grid grid-rows-6 rounded-md">
+            <div className="">
+              <h3 className="text-xl font-semibold py-4 border-b-2">
+                Shipping details
+              </h3>
+            </div>
+
+            <div className="row-span-5 flex-grow mt-10 md:mt-0 md:pr-16 max-w-3xl space-y-6">
               {/* full name */}
               <div>
                 <label
                   className="nc-Label text-base font-medium text-neutral-900"
                   data-nc-id="Label"
                 >
-                  Full name
+                  {errors.name ? (
+                    <span className="text-red-500 font-medium">
+                      Full name is required!
+                    </span>
+                  ) : (
+                    <span className="flex justify-between">Full name</span>
+                  )}
                 </label>
                 <input
-                  {...register("name", { required: false })}
+                  {...register("name", { required: true })}
                   name="name"
                   type="text"
                   className="block w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 mt-1.5"
@@ -161,7 +178,13 @@ export default function Checkout() {
                   className="nc-Label text-base font-medium text-neutral-900"
                   data-nc-id="Label"
                 >
-                  Address
+                  {errors.address ? (
+                    <span className="text-red-500 font-medium">
+                      Address is required!
+                    </span>
+                  ) : (
+                    <span className="flex justify-between">Address</span>
+                  )}
                 </label>
                 <div className="mt-1.5 flex">
                   <span className="inline-flex items-center px-4 rounded-l-2xl border border-r-0 border-neutral-200 bg-neutral-50 text-neutral-500 text-sm">
@@ -180,7 +203,7 @@ export default function Checkout() {
                     </svg>
                   </span>
                   <input
-                    {...register("address", { required: false })}
+                    {...register("address", { required: true })}
                     name="address"
                     type="text"
                     className="block w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white rounded-2xl text-sm font-normal h-11 px-4 py-3 !rounded-l-none"
@@ -188,163 +211,203 @@ export default function Checkout() {
                   />
                 </div>
               </div>
-            </form>
-          </div>
-
-          <div className="py-8">
-            <h3 className="text-xl font-semibold py-4 border-b-2">Payment</h3>
-          </div>
-
-          <div className="overflow-hidden px-4 gap-3 rounded-2xl w-full grid grid-rows-5 grid-cols-3 bg-gradient-to-r from-sky-500 to-indigo-500"
-            
-            >
-            <div className="py-4">
-              <h3 className="text-xl font-semibold">Credit Card</h3>
-            </div>
-            {/* Card Number */}
-            <div className="row-start-2 col-span-3 ">
-              <label
-                className="nc-Label text-base font-medium text-neutral-900"
-                data-nc-id="Label"
-              >
-                Card Number
-              </label>
-              <NumberInput
-                {...register("cardNumber", { required: true })}
-                name="cardNumber"
-                type="text"
-                value={cardNumber}
-                onChange={detectCardType}
-                className="block w-full form-input rounded-md"
-              />
             </div>
 
-            {/* Card holder name */}
-            <div className="row-start-3 col-span-3 ">
-              <label
-                className="nc-Label text-base font-medium text-neutral-900"
-                data-nc-id="Label"
-              >
-                Holder's Name
-              </label>
-              <input
-                {...register("cardHolder", { required: true })}
-                name="cardHolder"
-                type="text"
-                className="block w-full form-input rounded-md"
-              />
+            <div className="py-8">
+              <h3 className="text-xl font-semibold py-4 border-b-2">Payment</h3>
             </div>
 
-            {/* expire date */}
-            <div className="row-start-4 col-span-2 ">
-              <label
-                className="nc-Label text-base font-medium text-neutral-900"
-                data-nc-id="Label"
-              >
-                Expiration
-              </label>
-              <div className="grid grid-cols-12">
-                <div className="col-span-3">
-                  <label className="nc-Label text-xs" data-nc-id="Label">
-                    Month (MM)
-                  </label>
-                  <input
-                    {...register("expMonth", { required: true })}
-                    name="expMonth"
-                    type="text"
-                    placeholder="00"
-                    className="block w-10/12 form-input rounded-md"
-                  />
+            <div className="overflow-hidden px-4 gap-3 rounded-2xl w-full grid grid-rows-5 grid-cols-3 bg-gradient-to-r from-blue-200 to-blue-300">
+              <div className="py-4">
+                <h3 className="text-xl font-semibold">Credit Card</h3>
+              </div>
+              {/* Card Number */}
+              <div className="row-start-2 col-span-3 ">
+                <label
+                  className="nc-Label text-base font-medium text-neutral-900"
+                  data-nc-id="Label"
+                >
+                  {errors.cardNumber ? (
+                  <span className="text-red-500 font-medium">
+                    Card number is required!
+                  </span>
+                ) : (
+                  <span className="flex justify-between">
+                    Card number{" "}
+                    <span className="hover:text-gray-500">{"="} 16</span>{" "}
+                  </span>
+                )}
+                </label>
+                <NumberInput
+                  name="cardNumber"
+                  id="cardNumber"
+                  register={register}
+                  value={cardNumber}
+                  required={true}
+                  onChange={detectCardType}
+                  className="block w-full form-input rounded-md"
+                />
+              </div>
+
+              {/* Card holder name */}
+              <div className="row-start-3 col-span-3 ">
+                <label
+                  className="nc-Label text-base font-medium text-neutral-900"
+                  data-nc-id="Label"
+                >
+                  {errors.cardHolder ? (
+                    <span className="text-red-500 font-medium">
+                      Holder's name is required!
+                    </span>
+                  ) : (
+                    <span className="flex justify-between">Holder's Name</span>
+                  )}
+                  
+                </label>
+                <input
+                  {...register("cardHolder", { required: true })}
+                  name="cardHolder"
+                  type="text"
+                  className="block w-full form-input rounded-md"
+                />
+              </div>
+
+              {/* expire date */}
+              <div className="row-start-4 col-span-2 ">
+                <label
+                  className="nc-Label text-base font-medium text-neutral-900"
+                  data-nc-id="Label"
+                >
+                   {errors.expMonth ||  errors.expYear ? (
+                    <span className="text-red-500 font-medium">
+                      Expiration is required!
+                    </span>
+                  ) : (
+                    <span className="flex justify-between">Expiration</span>
+                  )}
+                  
+                </label>
+                <div className="grid grid-cols-12">
+                  <div className="col-span-3">
+                    <label className="nc-Label text-xs" data-nc-id="Label">
+                      Month
+                    </label>
+                    <input
+                      {...register("expMonth", { required: true })}
+                      name="expMonth"
+                      type="text"
+                      placeholder="00"
+                      className="block w-10/12 form-input rounded-md"
+                    />
+                  </div>
+                  <div className="col-span-4">
+                    <label className="nc-Label text-xs" data-nc-id="Label">
+                      Year
+                    </label>
+                    <input
+                      {...register("expYear", { required: true })}
+                      name="expYear"
+                      type="text"
+                      placeholder="0000"
+                      className="block w-full form-input rounded-md"
+                    />
+                  </div>
                 </div>
-                <div className="col-span-4">
-                  <label className="nc-Label text-xs" data-nc-id="Label">
-                    Year (YYYY)
-                  </label>
-                  <input
-                    {...register("expYear", { required: true })}
-                    name="expYear"
-                    type="text"
-                    placeholder="0000"
-                    className="block w-full form-input rounded-md"
-                  />
-                </div>
+              </div>
+
+              {/* cvv  */}
+              <div className="row-start-5 ">
+                <label
+                  className="nc-Label text-base font-medium text-neutral-900"
+                  data-nc-id="Label"
+                >
+                  {errors.ccv ? (
+                    <span className="text-red-500 font-medium">
+                      CVV is required!
+                    </span>
+                  ) : (
+                    <span className="flex justify-between">CVV</span>
+                  )}
+                  
+                </label>
+                <input
+                  {...register("ccv", { required: true })}
+                  name="ccv"
+                  type="text"
+                  placeholder="000"
+                  className="block w-full form-input rounded-md"
+                />
+              </div>
+
+              <div className="relative row-start-5 px-4 col-start-3">
+                <LazyLoadingImage
+                  src={cardIcon}
+                  className=" absolute -top-5 right-0"
+                  width="120"
+                  height="160"
+                />
               </div>
             </div>
 
-            {/* cvv  */}
-            <div className="row-start-5 ">
-              <label
-                className="nc-Label text-base font-medium text-neutral-900"
-                data-nc-id="Label"
+            <div className="py-8 ">
+              <button
+                type="submit"
+                className="nc-Button w-full relative h-auto inline-flex items-center justify-center rounded-md transition-colors text-sm sm:text-base font-medium py-3 px-4 sm:py-3.5 sm:px-6 disabled:bg-opacity-90 bg-blue-900 hover:bg-blue-800 text-slate-50 shadow-xl flex-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000"
               >
-                CVV
-              </label>
-              <input
-                {...register("expYear", { required: true })}
-                name="expYear"
-                type="text"
-                placeholder="000"
-                className="block w-4/12 form-input rounded-md"
-              />
-            </div>
-
-            <div className="relative row-start-5 px-4 col-start-3">
-              <LazyLoadingImage
-                src={cardIcon}
-                className=" absolute -top-5 right-0"
-                width="120"
-                height="160"
-              />
+                Proceed to payment
+              </button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="rounded-md col-span-4 border-1 bg-white p-4">
-        <div className="grid grid-rows-6 rounded-md ">
-          <div className="">
-            <h3 className="text-xl font-semibold py-4 border-b-2">Summary</h3>
-          </div>
-          <div className="row-span-5">
-            {cart?.map((crt) => (
-              <div key={crt?._id} className="flex py-5 last:pb-0">
-                <div className="ml-4 flex flex-1 flex-col">
-                  <div>
-                    <div className="flex justify-between">
-                      <div>
-                        <h3 className="text-base font-medium">
-                          {crt?.product?.title}
-                        </h3>
-                      </div>
-                      <div className="mt-0.5">
-                        <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
-                          <span className="text-green-500 !leading-none">
-                            €{crt?.product?.price}
-                          </span>
+        <div className="rounded-md col-span-4 border-1 bg-white p-4">
+          <div className="grid grid-rows-6 rounded-md ">
+            <div className="">
+              <h3 className="text-xl font-semibold py-4 border-b-2">Summary</h3>
+            </div>
+            <div className="row-span-5">
+              {cart?.map((crt) => (
+                <div key={crt?._id} className="flex py-5 last:pb-0">
+                  <div className="ml-4 flex flex-1 flex-col">
+                    <div>
+                      <div className="flex justify-between">
+                        <div>
+                          <h3 className="text-base font-medium">
+                            {crt?.product?.title}
+                          </h3>
+                        </div>
+                        <div className="mt-0.5">
+                          <div className="flex items-center border-2 border-green-500 rounded-lg py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium">
+                            <span className="text-green-500 !leading-none">
+                              €{crt?.product?.price}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-1 items-end justify-between text-sm">
-                    <p className="text-gray-500">Qty {crt?.quantity}</p>
+                    <div className="flex flex-1 items-end justify-between text-sm">
+                      <p className="text-gray-500">Qty {crt?.quantity}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            <div className="bg-neutral-50 p-5">
-              <p className="flex justify-between font-semibold text-slate-900">
-                <span>
-                  <span>Subtotal</span>
-                  <span className="block text-sm text-slate-500 font-normal">
-                    Shipping and taxes calculated at checkout.
+              ))}
+              <div className="bg-neutral-50 p-5">
+                <p className="flex justify-between font-semibold text-slate-900">
+                  <span>
+                    <span>Subtotal</span>
+                    <span className="block text-sm text-slate-500 font-normal">
+                      Shipping and taxes calculated at checkout.
+                    </span>
                   </span>
-                </span>
-                <span className="">€{subtotal}.00</span>
-              </p>
+                  <span className="">€{subtotal}.00</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
+
+        {isOpen && <CheckoutModal isOpen={isOpen} setIsOpen={setIsOpen} />}
       </div>
-    </div>
+    </form>
   );
 }

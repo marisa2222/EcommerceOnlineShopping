@@ -1,11 +1,19 @@
 import React from "react";
 
-const NumberInput = (props) => {
+const NumberInput = ({
+  name,
+  id,
+  register,
+  className,
+  value,
+  required,
+  onChange
+}) => {
   function handleChange(event) {
     const value = event.target.value;
     const regex = /^([0-9\s]*)$/; // numbers and sapce and empty
     if (regex.test(value)) {
-      props.onChange(value);
+      onChange(value);
     }
   }
 
@@ -22,7 +30,7 @@ const NumberInput = (props) => {
     ) {
       return;
     }
-    
+
     if (!/^\d*$/.test(event.key)) {
       event.preventDefault();
     }
@@ -31,11 +39,12 @@ const NumberInput = (props) => {
   return (
     <>
       <input
+        {...register(name, { required })}
         type="text"
-        name={props.name}
-        id={props.id}
-        className={props.className}
-        value={props.value}
+        name={name}
+        id={id}
+        className={className}
+        value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       />
