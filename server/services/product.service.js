@@ -13,6 +13,7 @@ const User = require("../models/user.model");
 const remove = require("../utils/remove.util");
 
 const storeService = require("./store.service");
+const chatGPTService = require("./chatGPT.service");
 
 // remove gallery
 async function galleryRemove(gallery) {
@@ -27,6 +28,10 @@ exports.galleryUpdate = async ({ pid }) => {
 
 /* insert new product */
 exports.createProduct = async (data) => {
+  if (!data.description){
+    data.description = await chatGPTService.getProductDescription(data);
+  }
+  
   const result = await Product.create(data);
   await Subcategory.findByIdAndUpdate(result.subcategory, {
     $push: { products: result._id },
