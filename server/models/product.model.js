@@ -87,6 +87,12 @@ const productSchema = new mongoose.Schema(
       min: [5, "Price unit won't be less than 5"],
     },
 
+    // for category
+    category: {
+      type: ObjectId,
+      ref: "Category",
+    },
+
     // for subcategory
     subcategory: {
       type: ObjectId,
@@ -167,6 +173,8 @@ const productSchema = new mongoose.Schema(
           type: String,
           required: [true, "Please, provide a product color"],
         },
+        colorName:{
+            type:String},
         createdAt: {
           type: Date,
           default: Date.now,
