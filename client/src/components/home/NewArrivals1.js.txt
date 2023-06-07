@@ -33,7 +33,7 @@ const NewArrivals = () => {
       <div className="flex flex-col gap-y-8">
         <h2 className=" text-3xl md:text-4xl font-semibold">
           New Arrivals<span className="">. </span>
-          <GrayText>New Sports equipment</GrayText>
+          <GrayText>New Products</GrayText>
         </h2>
         <div>
           {/* start */}

@@ -16,7 +16,7 @@ const NewArrivals = ({ products, loading, type }) => {
           <div className="lg:mb-8 mb-6">
             <h2 className=" text-3xl md:text-4xl font-semibold">
               New Arrivals<span className="">. </span>
-              <GrayText>New Sports equipment</GrayText>
+              <GrayText>New Products</GrayText>
             </h2>
           </div>
           <div>

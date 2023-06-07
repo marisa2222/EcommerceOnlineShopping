@@ -20,11 +20,7 @@ const Profile = () => {
       icon: ProfileIcon,
       link: "/my-profile",
     },
-    {
-      name: "My Order",
-      icon: OrderIcon,
-      link: "/my-order",
-    },
+ 
     {
       name: "Contact Us",
       icon: ContactIcon,

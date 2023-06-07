@@ -51,33 +51,10 @@ const BrandCards = ({ brands }) => {
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-semibold">{title}</h2>
               </div>
-              <Link
-                className="flex items-center text-sm font-medium group-hover:text-primary-500 transition-colors"
-                to={`/brand/${title}/${_id}`}
-              >
-                <span>See Collection</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                  className="w-4 h-4 ml-2.5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                  ></path>
-                </svg>
-              </Link>
+           
             </div>
           </div>
-          <Link
-            to={`/brand/${title?.toLowerCase()}/${_id}`}
-            className="absolute inset-0"
-          ></Link>
+          
         </div>
       ))}
     </>
