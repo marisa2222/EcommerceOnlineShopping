@@ -117,7 +117,32 @@ const Contact = () => {
             </form>
 
             <div className="space-y-8 md:order-1 order-2">
-     
+              <div>
+                <h3 className="uppercase font-semibold text-sm tracking-wider">
+                  🗺 ADDRESS
+                </h3>
+                <span className="block mt-2 text-neutral-500">
+                  <a href="">
+                    Berlin , WBS
+                  </a>
+                </span>
+              </div>
+              <div>
+                <h3 className="uppercase font-semibold text-sm tracking-wider">
+                  💌 EMAIL
+                </h3>
+                <span className="block mt-2 text-neutral-500">
+                  <a href="msharifi2222:m@gmail.com">msharifi2222@gmail.com</a>
+                </span>
+              </div>
+              <div>
+                <h3 className="uppercase font-semibold text-sm tracking-wider">
+                  ☎️ PHONE
+                </h3>
+                <span className="block mt-2 text-neutral-500">
+                  <a href="tel:+4901906315901">+4901111-111111</a>
+                </span>
+              </div>
             </div>
           </div>
         </div>
